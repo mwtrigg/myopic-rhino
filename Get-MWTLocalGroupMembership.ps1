@@ -20,7 +20,8 @@
  
  .NOTES
    Revisions of Note:
-   v1.0  - Initial GitHub Version
+   v1.0  06/02/2015 - Initial GitHub Version
+   v1.1  06/03/2016 - Change "IncludeEmpty" to variable/parameter type Switch
      
  .LINK
 		
@@ -32,9 +33,9 @@ Param
         [Alias("Computername")]
         $comp = $env:computername,
               
-        [bool]
+        [switch]
         [Alias("Emtpy","All")]
-        $IncludeEmpty = $false
+        $IncludeEmpty
 	)
 
 $pc = [ADSI]("WinNT://$comp")
@@ -73,7 +74,7 @@ $groups | ForEach-Object {
             }
         } 
 }
-switch ($IncludeEmpty)
+switch ($IncludeEmpty.IsPresent)
 {
     $true  {$members | Select-Object LocalGroup,@{n="Member";e={if($_.Name -eq "EMPTY"){"EMPTY"}else{$_.Domain + "\" + $_.Name}}},@{n="Class";e={if($_.Class -eq "EMPTY"){""}else{$_.Class}}}}
     $false {$members | Where-Object {$_.Name -ne "EMPTY"} | Select-Object LocalGroup,@{n="Member";e={$_.Domain + "\" + $_.Name}},Class}
