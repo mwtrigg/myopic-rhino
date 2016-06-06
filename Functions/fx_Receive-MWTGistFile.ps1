@@ -24,6 +24,7 @@
  .NOTES
    Revisions of Note:
    v1.0  06/03/2016 - Initial GitHub Version
+   v1.1  06/06/2016 - Hide the GistID File
     
  .LINK
 		
@@ -33,6 +34,7 @@
 
 function Receive-MWTGistFile
 {
+    [CmdletBinding()]
     Param
     (
 		[string]
@@ -53,6 +55,7 @@ $Script:Which | ForEach-Object {
     Save-Gist -Id `$_.Id -Path $Path
     Rename-Item -Path $Path\`$(`$_.Id) -NewName $Path\`$(`$_.Description)
     New-Item -Path $Path\`$(`$_.Description) -Name GistId -ItemType File -Value `$_.Id
+    (Get-ChildItem -Path $Path\`$(`$_.Description)\GistId).Attributes+='Hidden'
     }
 "@
 
